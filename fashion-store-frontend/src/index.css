@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme CSS Variables */
+:root {
+  /* Primary Color (Default: Indigo #6366f1) */
+  --color-primary: 99 102 241;
+  --color-primary-50: 99 102 241;
+  --color-primary-100: 99 102 241;
+  --color-primary-200: 99 102 241;
+  --color-primary-300: 99 102 241;
+  --color-primary-400: 99 102 241;
+  --color-primary-500: 99 102 241;
+  --color-primary-600: 99 102 241;
+  --color-primary-700: 99 102 241;
+  --color-primary-800: 99 102 241;
+  --color-primary-900: 99 102 241;
+
+  /* Secondary Color (Default: Pink #ec4899) */
+  --color-secondary: 236 72 153;
+  --color-secondary-50: 236 72 153;
+  --color-secondary-100: 236 72 153;
+  --color-secondary-200: 236 72 153;
+  --color-secondary-300: 236 72 153;
+  --color-secondary-400: 236 72 153;
+  --color-secondary-500: 236 72 153;
+  --color-secondary-600: 236 72 153;
+  --color-secondary-700: 236 72 153;
+  --color-secondary-800: 236 72 153;
+  --color-secondary-900: 236 72 153;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 antialiased;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-colors
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700
+           focus-visible:ring-primary-600;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-100 text-gray-900 hover:bg-gray-200
+           focus-visible:ring-gray-500;
+  }
+
+  .btn-outline {
+    @apply btn border border-gray-300 bg-white hover:bg-gray-50
+           focus-visible:ring-gray-500;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5
+           text-gray-900 placeholder:text-gray-400
+           focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20
+           disabled:cursor-not-allowed disabled:bg-gray-50;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm;
+  }
+}
+
+
+/* Toast Animation */
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-progress {
+  animation: progress 3s linear forwards;
+}

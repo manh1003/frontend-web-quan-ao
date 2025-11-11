@@ -1,0 +1,2124 @@
+{
+  "info": {
+    "_postman_id": "fashion-store-api-2025",
+    "name": "Fashion Store API - Complete",
+    "description": "API collection đầy đủ cho ứng dụng web bán quần áo với authentication và tất cả các chức năng",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"123456789\",\n  \"fullName\": \"Test User\",\n  \"phone\": \"0987654321\",\n  \"roleId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Đăng ký tài khoản mới. Password: 123456789"
+          }
+        },
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "    pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"admin\",\n  \"password\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Đăng nhập với tài khoản admin (mật khẩu từ data.sql: 123456789)"
+          }
+        },
+        {
+          "name": "Login as Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"manager01\",\n  \"password\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Sales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"sales01\",\n  \"password\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"123456789\",\n  \"newPassword\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryName\": \"Áo Khoác Nam\",\n  \"parentCategoryId\": 1,\n  \"description\": \"Áo khoác nam các loại\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryName\": \"Áo Khoác Nam Cao Cấp\",\n  \"parentCategoryId\": 1,\n  \"description\": \"Áo khoác nam chất lượng cao\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Brands",
+      "item": [
+        {
+          "name": "Get All Brands",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/brands",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brands"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Brands",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/brands/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brands", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Brand By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/brands/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brands", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brandName\": \"H&M\",\n  \"description\": \"Thương hiệu thời trang Thụy Điển\",\n  \"logoUrl\": \"https://example.com/hm-logo.png\",\n  \"country\": \"Thụy Điển\",\n  \"website\": \"https://hm.com\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/brands",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brands"]
+            }
+          }
+        },
+        {
+          "name": "Update Brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brandName\": \"ROUTINE Vietnam\",\n  \"description\": \"Thương hiệu thời trang Việt Nam cao cấp - Updated\",\n  \"country\": \"Việt Nam\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/brands/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brands", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/brands/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brands", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"AP-NAM-002\",\n  \"productName\": \"Áo Polo Nam Cao Cấp\",\n  \"categoryId\": 8,\n  \"brandId\": 1,\n  \"material\": \"Cotton Pima 100%\",\n  \"description\": \"Áo polo nam chất liệu cao cấp, thoáng mát\",\n  \"careInstructions\": \"Giặt máy 30°C, không tẩy\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productName\": \"Áo Sơ Mi Nam Oxford Trắng - Updated\",\n  \"categoryId\": 6,\n  \"brandId\": 3,\n  \"material\": \"Cotton Oxford 100%\",\n  \"description\": \"Áo sơ mi nam Oxford trắng basic cao cấp\",\n  \"careInstructions\": \"Giặt máy 30°C, là nhiệt độ trung bình\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Variants",
+      "item": [
+        {
+          "name": "Get All Variants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-variants",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-variants"]
+            }
+          }
+        },
+        {
+          "name": "Get Variants By Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-variants/product/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-variants", "product", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Low Stock Variants",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-variants/low-stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-variants", "low-stock"]
+            }
+          }
+        },
+        {
+          "name": "Create Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"color\": \"Xanh Navy\",\n  \"size\": \"XXL\",\n  \"variantSku\": \"ASM-NAM-001-XN-XXL\",\n  \"costPrice\": 150000,\n  \"retailPrice\": 299000,\n  \"salePrice\": null,\n  \"stockQuantity\": 30,\n  \"minStockThreshold\": 10,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/product-variants",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-variants"]
+            }
+          }
+        },
+        {
+          "name": "Update Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Trắng\",\n  \"size\": \"S\",\n  \"retailPrice\": 319000,\n  \"salePrice\": 279000,\n  \"stockQuantity\": 55,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/product-variants/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-variants", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Images",
+      "item": [
+        {
+          "name": "Get Images By Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/product/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "product", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Image By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Primary Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/product/1/primary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "product", "1", "primary"]
+            }
+          }
+        },
+        {
+          "name": "Get Images By Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/variant/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "variant", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Product Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"variantId\": null,\n  \"imageUrl\": \"https://example.com/products/new-image.jpg\",\n  \"isPrimary\": false,\n  \"displayOrder\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images"]
+            }
+          }
+        },
+        {
+          "name": "Update Product Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageUrl\": \"https://example.com/products/updated-image.jpg\",\n  \"isPrimary\": false,\n  \"displayOrder\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "1"]
+            }
+          }
+        },
+        {
+          "name": "Set Primary Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/2/set-primary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "2", "set-primary"]
+            }
+          }
+        },
+        {
+          "name": "Update Display Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/1/display-order?displayOrder=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "1", "display-order"],
+              "query": [{ "key": "displayOrder", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Product Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete All Product Images",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/product-images/product/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "product-images", "product", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Get All Customers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newcustomer@example.com\",\n  \"phone\": \"0901234567\",\n  \"fullName\": \"Nguyễn Văn Khách Hàng Mới\",\n  \"gender\": \"MALE\",\n  \"dateOfBirth\": \"1995-05-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nguyenvana.updated@gmail.com\",\n  \"phone\": \"0912345679\",\n  \"fullName\": \"Nguyễn Văn A - Updated\",\n  \"gender\": \"MALE\",\n  \"dateOfBirth\": \"1990-05-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customers", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer Addresses",
+      "item": [
+        {
+          "name": "Get Addresses By Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses/customer/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses", "customer", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Address By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Default Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses/customer/1/default",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses", "customer", "1", "default"]
+            }
+          }
+        },
+        {
+          "name": "Create Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": 1,\n  \"recipientName\": \"Nguyễn Văn A\",\n  \"phone\": \"0912345678\",\n  \"addressLine\": \"999 Đường Mới\",\n  \"ward\": \"Phường 1\",\n  \"district\": \"Quận 10\",\n  \"city\": \"TP. Hồ Chí Minh\",\n  \"isDefault\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses"]
+            }
+          }
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientName\": \"Nguyễn Văn A\",\n  \"phone\": \"0912345678\",\n  \"addressLine\": \"123 Đường Lê Lợi - Updated\",\n  \"ward\": \"Phường Bến Nghé\",\n  \"district\": \"Quận 1\",\n  \"city\": \"TP. Hồ Chí Minh\",\n  \"isDefault\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses", "1"]
+            }
+          }
+        },
+        {
+          "name": "Set Default Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses/2/set-default",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses", "2", "set-default"]
+            }
+          }
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customer-addresses/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer-addresses", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Orders By Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/customer/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "customer", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderNumber\": \"ORD-2025-NEW\",\n  \"customerId\": 1,\n  \"shippingAddressId\": 1,\n  \"shippingMethod\": \"Giao hàng nhanh\",\n  \"shippingFee\": 30000,\n  \"paymentMethod\": \"COD\",\n  \"subtotal\": 598000,\n  \"discountAmount\": 0,\n  \"totalAmount\": 628000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "1", "status"]
+            },
+            "description": "Status: PENDING, CONFIRMED, PROCESSING, SHIPPING, DELIVERED, CANCELLED, RETURNED"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Suppliers",
+      "item": [
+        {
+          "name": "Get All Suppliers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/suppliers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suppliers"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Suppliers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/suppliers/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suppliers", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Supplier By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/suppliers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suppliers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Supplier",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"supplierName\": \"Công ty TNHH Vải Cao Cấp\",\n  \"contactPerson\": \"Trần Văn B\",\n  \"email\": \"contact@vaicaocap.com\",\n  \"phone\": \"0281234999\",\n  \"address\": \"456 Đường DEF, Quận 3, TP.HCM\",\n  \"taxCode\": \"0999888777\",\n  \"paymentTerms\": \"Thanh toán trong 30 ngày\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/suppliers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suppliers"]
+            }
+          }
+        },
+        {
+          "name": "Update Supplier",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"supplierName\": \"Công Ty TNHH Vải Việt Nam - Updated\",\n  \"contactPerson\": \"Nguyễn Văn A\",\n  \"email\": \"contact@vaivietnam.com\",\n  \"phone\": \"0281234567\",\n  \"address\": \"123 Đường ABC, Quận 1, TP.HCM\",\n  \"paymentTerms\": \"Thanh toán trong 45 ngày\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/suppliers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suppliers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Supplier",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/suppliers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suppliers", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Purchase Orders",
+      "item": [
+        {
+          "name": "Get All Purchase Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Purchase Order By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Purchase Order By Number",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/number/PO-2025-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "number", "PO-2025-001"]
+            }
+          }
+        },
+        {
+          "name": "Get Purchase Orders By Supplier",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/supplier/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "supplier", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Purchase Orders By Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/status/PENDING",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "status", "PENDING"]
+            },
+            "description": "Status: PENDING, APPROVED, RECEIVED, CANCELLED"
+          }
+        },
+        {
+          "name": "Create Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"poNumber\": \"PO-2025-NEW\",\n  \"supplierId\": 1,\n  \"orderDate\": \"2025-10-16\",\n  \"expectedDate\": \"2025-10-30\",\n  \"totalAmount\": 15000000,\n  \"notes\": \"Đơn hàng test mới\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders"]
+            }
+          }
+        },
+        {
+          "name": "Update Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedDate\": \"2025-11-05\",\n  \"totalAmount\": 16000000,\n  \"notes\": \"Đơn hàng đã cập nhật\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Approve Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/4/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "4", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Receive Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/3/receive?receivedDate=2025-10-20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "3", "receive"],
+              "query": [{ "key": "receivedDate", "value": "2025-10-20" }]
+            }
+          }
+        },
+        {
+          "name": "Cancel Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/purchase-orders/4/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "purchase-orders", "4", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory Transactions",
+      "item": [
+        {
+          "name": "Get All Transactions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Transactions By Variant",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/by-variant/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "by-variant", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Transactions By Type",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/by-type/IN",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "by-type", "IN"]
+            },
+            "description": "Type: IN, OUT, ADJUSTMENT"
+          }
+        },
+        {
+          "name": "Get Transactions By Date Range",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/by-date-range?startDate=2025-01-01T00:00:00&endDate=2025-12-31T23:59:59",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "by-date-range"],
+              "query": [
+                { "key": "startDate", "value": "2025-01-01T00:00:00" },
+                { "key": "endDate", "value": "2025-12-31T23:59:59" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transactions By Reference",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/by-reference?referenceType=purchase_order&referenceId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "by-reference"],
+              "query": [
+                { "key": "referenceType", "value": "purchase_order" },
+                { "key": "referenceId", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transactions By User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/by-user/5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "by-user", "5"]
+            }
+          }
+        },
+        {
+          "name": "Get Total IN Quantity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/stats/total-in/1",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "inventory-transactions",
+                "stats",
+                "total-in",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Total OUT Quantity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/stats/total-out/1",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "inventory-transactions",
+                "stats",
+                "total-out",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Current Stock",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/stats/current-stock/1",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "inventory-transactions",
+                "stats",
+                "current-stock",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Latest Transaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/latest/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "latest", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Transaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variantId\": 1,\n  \"transactionType\": \"IN\",\n  \"quantity\": 50,\n  \"referenceType\": \"purchase_order\",\n  \"referenceId\": 1,\n  \"notes\": \"Nhập hàng từ PO mới\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions"]
+            }
+          }
+        },
+        {
+          "name": "Delete Transaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory-transactions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventory-transactions", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coupons",
+      "item": [
+        {
+          "name": "Get All Coupons",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "coupons"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Coupons",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/coupons/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "coupons", "active"]
+            }
+          }
+        },
+        {
+          "name": "Validate Coupon",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/coupons/validate/TET2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "coupons", "validate", "TET2025"]
+            }
+          }
+        },
+        {
+          "name": "Create Coupon",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"couponCode\": \"WINTER2025\",\n  \"couponName\": \"Giảm giá mùa đông 2025\",\n  \"description\": \"Giảm 15% cho đơn hàng từ 300k\",\n  \"discountType\": \"PERCENTAGE\",\n  \"discountValue\": 15,\n  \"maxDiscountAmount\": 150000,\n  \"minOrderAmount\": 300000,\n  \"usageLimit\": 200,\n  \"startDate\": \"2025-12-01T00:00:00\",\n  \"endDate\": \"2026-02-28T23:59:59\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "coupons"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promotions",
+      "item": [
+        {
+          "name": "Get All Promotions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions"]
+            }
+          }
+        },
+        {
+          "name": "Get Promotion By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Promotions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Upcoming Promotions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/upcoming",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "upcoming"]
+            }
+          }
+        },
+        {
+          "name": "Get Expired Promotions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/expired",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "expired"]
+            }
+          }
+        },
+        {
+          "name": "Get Promotions By Type",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/by-type/PRODUCT_DISCOUNT",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "by-type", "PRODUCT_DISCOUNT"]
+            }
+          }
+        },
+        {
+          "name": "Get Promotions By Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/by-status?isActive=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "by-status"],
+              "query": [{ "key": "isActive", "value": "true" }]
+            }
+          }
+        },
+        {
+          "name": "Get Products In Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1", "products"]
+            }
+          }
+        },
+        {
+          "name": "Create Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promotionName\": \"Flash Sale Cuối Tuần\",\n  \"description\": \"Giảm giá sốc các sản phẩm cuối tuần\",\n  \"promotionType\": \"PRODUCT_DISCOUNT\",\n  \"startDate\": \"2025-10-18T00:00:00\",\n  \"endDate\": \"2025-10-20T23:59:59\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions"]
+            },
+            "description": "PromotionType values: PRODUCT_DISCOUNT, BUY_X_GET_Y, BUNDLE"
+          }
+        },
+        {
+          "name": "Update Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promotionName\": \"Sale cuối mùa - Updated\",\n  \"description\": \"Giảm giá hàng loạt sản phẩm cuối mùa - mở rộng thời gian\",\n  \"endDate\": \"2025-03-05T23:59:59\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add Product To Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 5,\n  \"discountPercentage\": 25.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1", "products"]
+            }
+          }
+        },
+        {
+          "name": "Remove Product From Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1/products/2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1", "products", "2"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Promotion Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1/toggle-status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1", "toggle-status"]
+            }
+          }
+        },
+        {
+          "name": "Delete Promotion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/promotions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "promotions", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Dashboard Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Sales Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/sales?startDate=2025-01-01T00:00:00&endDate=2025-12-31T23:59:59",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "sales"],
+              "query": [
+                { "key": "startDate", "value": "2025-01-01T00:00:00" },
+                { "key": "endDate", "value": "2025-12-31T23:59:59" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Inventory Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "inventory"]
+            }
+          }
+        },
+        {
+          "name": "Order Status Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/order-status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "order-status"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
