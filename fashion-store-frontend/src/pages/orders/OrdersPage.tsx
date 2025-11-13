@@ -202,12 +202,42 @@ export function OrdersPage() {
                         </div>
                       </div>
 
-                      {/* Items - TODO: Hiển thị order items */}
+                      {/* Items */}
                       <div className="mb-4">
-                        <p className="text-sm text-gray-600 mb-2">Sản phẩm:</p>
-                        <p className="text-gray-500 text-sm">
-                          (Chi tiết sản phẩm sẽ hiển thị khi có OrderItem API)
-                        </p>
+                        <p className="text-sm text-gray-600 mb-3">Sản phẩm:</p>
+                        {order.items && order.items.length > 0 ? (
+                          <div className="space-y-2">
+                            {order.items.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-3"
+                              >
+                                <div className="flex-1">
+                                  <p className="font-medium text-gray-900">
+                                    {item.product_name || "Sản phẩm"}
+                                  </p>
+                                  <div className="flex gap-3 mt-1 text-xs text-gray-600">
+                                    {item.variant_sku && (
+                                      <span>SKU: {item.variant_sku}</span>
+                                    )}
+                                    {item.color && <span>Màu: {item.color}</span>}
+                                    {item.size && <span>Size: {item.size}</span>}
+                                  </div>
+                                </div>
+                                <div className="text-right ml-4">
+                                  <p className="text-gray-600">x{item.quantity}</p>
+                                  <p className="font-medium text-primary-600">
+                                    {formatCurrency(item.unit_price)}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-gray-500 text-sm">
+                            Không có thông tin sản phẩm
+                          </p>
+                        )}
                       </div>
 
                       {/* Footer */}

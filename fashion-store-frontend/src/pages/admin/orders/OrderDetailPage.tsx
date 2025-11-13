@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Package, MapPin, CreditCard, Truck, AlertCircle } from "lucide-react";
-import { getOrderById, updateOrderStatus } from "@/api/orders";
+import { ArrowLeft, Package, MapPin, CreditCard, Truck, AlertCircle, X } from "lucide-react";
+import { getOrderById, updateOrderStatus, ordersApi } from "@/api/orders";
 import type { Order } from "@/types";
 
 const statusColors = {
@@ -38,6 +38,9 @@ export function OrderDetailPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [showReasonModal, setShowReasonModal] = useState(false);
+  const [reasonType, setReasonType] = useState<"cancel" | "return" | null>(null);
+  const [reason, setReason] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -60,6 +63,14 @@ export function OrderDetailPage() {
 
   const handleUpdateStatus = async (newStatus: string) => {
     if (!order || !id) return;
+
+    // Nếu là hủy hoặc hoàn trả, hiển thị modal nhập lý do
+    if (newStatus === "CANCELLED" || newStatus === "RETURNED") {
+      setReasonType(newStatus === "CANCELLED" ? "cancel" : "return");
+      setReason("");
+      setShowReasonModal(true);
+      return;
+    }
 
     if (
       !confirm(
@@ -84,6 +95,42 @@ export function OrderDetailPage() {
       alert("Không thể cập nhật trạng thái đơn hàng");
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const handleConfirmReason = async () => {
+    if (!reason.trim()) {
+      alert("Vui lòng nhập lý do");
+      return;
+    }
+
+    if (!id) return;
+
+    try {
+      setUpdating(true);
+      setShowReasonModal(false);
+
+      if (reasonType === "cancel") {
+        await ordersApi.cancel(parseInt(id), reason);
+      } else if (reasonType === "return") {
+        await ordersApi.requestReturn(parseInt(id), reason);
+      }
+
+      // Reload order data
+      await loadOrder(parseInt(id));
+
+      alert(
+        reasonType === "cancel"
+          ? "Đã hủy đơn hàng thành công!"
+          : "Đã xác nhận hoàn trả đơn hàng thành công!"
+      );
+    } catch (error) {
+      console.error("Error updating order:", error);
+      alert("Không thể cập nhật đơn hàng");
+    } finally {
+      setUpdating(false);
+      setReason("");
+      setReasonType(null);
     }
   };
 
@@ -126,6 +173,67 @@ export function OrderDetailPage() {
 
   return (
     <div className="p-6 space-y-6">
+      {/* Modal nhập lý do hủy/hoàn trả */}
+      {showReasonModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-lg font-semibold">
+                {reasonType === "cancel" ? "Lý do hủy đơn hàng" : "Lý do hoàn trả đơn hàng"}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowReasonModal(false);
+                  setReason("");
+                  setReasonType(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Vui lòng nhập lý do <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder={
+                  reasonType === "cancel"
+                    ? "Ví dụ: Khách hàng yêu cầu hủy, hết hàng, địa chỉ không đúng..."
+                    : "Ví dụ: Sản phẩm bị lỗi, sai mô tả, khách không hài lòng..."
+                }
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Lý do này sẽ được lưu lại và hiển thị trong chi tiết đơn hàng
+              </p>
+            </div>
+            <div className="flex gap-3 p-6 border-t bg-gray-50">
+              <button
+                onClick={() => {
+                  setShowReasonModal(false);
+                  setReason("");
+                  setReasonType(null);
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleConfirmReason}
+                disabled={!reason.trim() || updating}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {updating ? "Đang xử lý..." : "Xác nhận"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -225,6 +333,20 @@ export function OrderDetailPage() {
               </button>
             </div>
           )}
+
+        {/* Nút hoàn trả (chỉ hiện khi đơn đã giao) */}
+        {order.status === "DELIVERED" && (
+          <div className="flex gap-2 pt-4 border-t">
+            <span className="text-sm text-gray-600 mr-2">Hoàn trả:</span>
+            <button
+              onClick={() => handleUpdateStatus("RETURNED")}
+              disabled={updating}
+              className="px-3 py-1 text-sm bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50"
+            >
+              Xác nhận hoàn trả
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

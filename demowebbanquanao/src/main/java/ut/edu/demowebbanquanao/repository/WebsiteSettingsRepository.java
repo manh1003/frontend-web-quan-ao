@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ut.edu.demowebbanquanao.entity.WebsiteSettings;
 
 @Repository
-public interface WebsiteSettingsRepository extends JpaRepository<WebsiteSettings, Long> {
+public interface WebsiteSettingsRepository extends JpaRepository<WebsiteSettings, String> {
     Optional<WebsiteSettings> findBySettingKey(String settingKey);
     boolean existsBySettingKey(String settingKey);
 }
