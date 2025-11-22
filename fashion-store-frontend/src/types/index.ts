@@ -46,6 +46,7 @@ export interface User {
   email: string;
   fullName: string;
   phone?: string;
+  role?: string;
   roleName?: string;
   permissions?: string[];
   isActive: boolean;

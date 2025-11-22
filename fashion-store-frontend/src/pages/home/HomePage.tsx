@@ -6,7 +6,6 @@ import {
   Shield,
   HeadphonesIcon,
   Star,
-  TrendingUp,
   Zap,
   Sparkles,
   Tag,
@@ -75,8 +74,6 @@ export function HomePage() {
       prev === 0 ? banners.length - 1 : prev - 1
     );
   };
-
-  const currentBanner = banners[currentBannerIndex];
 
   return (
     <div className="bg-white">

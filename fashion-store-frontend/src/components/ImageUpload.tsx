@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Upload, X, Eye, Star, RotateCcw } from 'lucide-react'
+import { Upload, X, Eye, Star } from 'lucide-react'
 import type { ProductImage } from '@/types'
 
 interface ImageUploadProps {

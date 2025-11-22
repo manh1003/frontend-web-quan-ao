@@ -101,7 +101,7 @@ export const useCartStore = create<CartState>()(
       name: 'cart-storage',
       version: 2,
       // Migration function để xử lý khi structure thay đổi
-      migrate: (persistedState: any, version: number) => {
+      migrate: (persistedState: any) => {
         // Nếu là version cũ (hoặc không có version), clear cart
         if (!persistedState.version || persistedState.version !== CART_STORAGE_VERSION) {
           console.log('Cart structure changed, clearing old cart data')

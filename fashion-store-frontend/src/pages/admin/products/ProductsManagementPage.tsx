@@ -10,7 +10,6 @@ import {
   ToggleLeft,
   ToggleRight,
   RefreshCw,
-  Upload,
 } from "lucide-react";
 import { productsApi, categoriesApi, brandsApi } from "@/api/products";
 import type { Product, ProductCategory, Brand } from "@/types";

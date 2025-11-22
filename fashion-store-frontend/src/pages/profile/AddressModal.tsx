@@ -16,7 +16,7 @@ export function AddressModal({
   onClose,
 }: AddressModalProps) {
   const isEditing = !!address;
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Form data
@@ -32,9 +32,7 @@ export function AddressModal({
     provinces,
     districts,
     wards,
-    loadingProvinces,
-    loadingDistricts,
-    loadingWards,
+    loading,
     selectedProvince,
     selectedDistrict,
     selectedWard,
@@ -86,16 +84,16 @@ export function AddressModal({
     }
 
     try {
-      setLoading(true);
+      setSubmitting(true);
 
       const addressData = {
         customerId,
         recipientName: formData.recipientName,
         phone: formData.phone,
         addressLine: formData.addressLine,
-        ward: getWardName(),
-        district: getDistrictName(),
-        city: getProvinceName(),
+        ward: getWardName(selectedWard),
+        district: getDistrictName(selectedDistrict),
+        city: getProvinceName(selectedProvince),
         isDefault: formData.isDefault,
       };
 
@@ -112,7 +110,7 @@ export function AddressModal({
           `Không thể ${isEditing ? "cập nhật" : "thêm"} địa chỉ`
       );
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -182,11 +180,11 @@ export function AddressModal({
                 className="input"
                 value={selectedProvince || ""}
                 onChange={(e) => setSelectedProvince(Number(e.target.value))}
-                disabled={loadingProvinces}
+                disabled={loading.provinces}
                 required
               >
                 <option value="">
-                  {loadingProvinces ? "Đang tải..." : "Chọn Tỉnh/Thành phố"}
+                  {loading.provinces ? "Đang tải..." : "Chọn Tỉnh/Thành phố"}
                 </option>
                 {provinces.map((province) => (
                   <option key={province.code} value={province.code}>
@@ -205,13 +203,13 @@ export function AddressModal({
                 className="input"
                 value={selectedDistrict || ""}
                 onChange={(e) => setSelectedDistrict(Number(e.target.value))}
-                disabled={!selectedProvince || loadingDistricts}
+                disabled={!selectedProvince || loading.districts}
                 required
               >
                 <option value="">
                   {!selectedProvince
                     ? "Chọn Tỉnh/Thành trước"
-                    : loadingDistricts
+                    : loading.districts
                     ? "Đang tải..."
                     : "Chọn Quận/Huyện"}
                 </option>
@@ -232,13 +230,13 @@ export function AddressModal({
                 className="input"
                 value={selectedWard || ""}
                 onChange={(e) => setSelectedWard(Number(e.target.value))}
-                disabled={!selectedDistrict || loadingWards}
+                disabled={!selectedDistrict || loading.wards}
                 required
               >
                 <option value="">
                   {!selectedDistrict
                     ? "Chọn Quận/Huyện trước"
-                    : loadingWards
+                    : loading.wards
                     ? "Đang tải..."
                     : "Chọn Phường/Xã"}
                 </option>
@@ -287,8 +285,8 @@ export function AddressModal({
 
           {/* Actions */}
           <div className="flex gap-3 mt-6">
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting
                 ? "Đang xử lý..."
                 : isEditing
                 ? "Cập nhật"
@@ -298,7 +296,7 @@ export function AddressModal({
               type="button"
               onClick={() => onClose(false)}
               className="btn-outline"
-              disabled={loading}
+              disabled={submitting}
             >
               Hủy
             </button>

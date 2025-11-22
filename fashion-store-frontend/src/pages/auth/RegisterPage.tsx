@@ -47,14 +47,13 @@ export function RegisterPage() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       clearError();
-      const { confirmPassword, ...registerData } = data;
+      const { confirmPassword, full_name, ...registerData } = data;
       // Convert full_name to fullName for backend compatibility
       const backendData = {
         ...registerData,
-        fullName: registerData.full_name,
+        fullName: full_name,
         phone: registerData.phone || undefined, // Convert empty string to undefined
       };
-      delete backendData.full_name;
       await registerUser(backendData);
       navigate("/", { replace: true });
     } catch (err) {

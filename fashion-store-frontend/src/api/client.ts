@@ -45,6 +45,12 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
+      // Nếu đang ở trang login hoặc register, không cần refresh token
+      const isAuthEndpoint = originalRequest.url?.includes('/api/auth/')
+      if (isAuthEndpoint) {
+        return Promise.reject(error)
+      }
+
       try {
         const refreshToken = localStorage.getItem('refreshToken')
         if (!refreshToken) {
@@ -71,7 +77,12 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
         localStorage.removeItem('user')
-        window.location.href = '/login'
+
+        // Chỉ redirect nếu không phải đang ở trang login/register
+        if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
+          window.location.href = '/login'
+        }
+
         return Promise.reject(refreshError)
       }
     }

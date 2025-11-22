@@ -36,6 +36,7 @@ export function LoginPage() {
       navigate(from, { replace: true })
     } catch (err) {
       console.error('Login error:', err)
+      // Error đã được set trong authStore, không cần làm gì thêm
     }
   }
 

@@ -90,15 +90,6 @@ export function CouponsManagementPage() {
     }
   };
 
-  const formatDateTime = (dateStr?: string) => {
-    if (!dateStr) return "";
-    try {
-      return new Date(dateStr).toLocaleString("vi-VN");
-    } catch {
-      return dateStr;
-    }
-  };
-
   const isExpired = (endDate: string) => {
     return new Date(endDate) < new Date();
   };

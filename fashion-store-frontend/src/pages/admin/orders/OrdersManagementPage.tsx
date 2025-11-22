@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Eye, Search, Filter, Download } from "lucide-react";
-import { getOrders, updateOrderStatus } from "@/api/orders";
+import { Eye, Search, Download } from "lucide-react";
+import { getOrders } from "@/api/orders";
 import type { Order } from "@/types";
 import * as XLSX from "xlsx";
 
@@ -44,22 +44,6 @@ export function OrdersManagementPage() {
       console.error("Error loading orders:", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleUpdateStatus = async (orderId: number, status: string) => {
-    try {
-      await updateOrderStatus(orderId, status);
-      setOrders((prev) =>
-        prev.map((order) =>
-          order.order_id === orderId
-            ? { ...order, status: status as any }
-            : order
-        )
-      );
-    } catch (error) {
-      console.error("Error updating order status:", error);
-      alert("Không thể cập nhật trạng thái đơn hàng");
     }
   };
 
